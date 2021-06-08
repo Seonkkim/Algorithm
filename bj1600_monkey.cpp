@@ -50,7 +50,8 @@ int monkey(){
 	
 		
 	}
-	
+	if (vis[h-1][w-1]<=0) return -1;
+	return 0;
 }
 
 int main(){
