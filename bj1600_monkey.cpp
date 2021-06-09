@@ -1,8 +1,9 @@
 #include <bits/stdc++.h>
 using namespace std;
+#define MAX 201
 int k,w,h;
-int board[201][201];
-int vis[201][201] = {-1,};
+int board[MAX][MAX];
+bool vis[MAX][MAX][31];
 int kx[8] = {1,2,2,1,-1,-2,-2,-1};
 int ky[8] = {-2,-1,1,2,2,1,-1,-2};
 int dx[4] = {1,0,-1,0};
@@ -10,51 +11,54 @@ int dy[4] = {0,1,0,-1};
 
 
 int monkey(){
-	queue<pair<int,int>> q;
-	q.push({0,0});
-	vis[0][0]++;
+	queue<pair<pair<int,int>,pair<int,int>>> q;
+	q.push({{0,0},{0,0}});
+	vis[0][0][0]=true;
 	while(!q.empty()){
 		auto cur = q.front();
-		if(cur.first==h-1&&cur.second==w-1) return vis[cur.first][cur.second];
-
+		int y = cur.first.first;
+		int x = cur.first.second;
+		int cnt = cur.second.first;
+		int k_cnt = cur.second.second;
 		q.pop();
-		if(k!=0){
+		if(y==h-1&&x==w-1) return cnt;
+
+		if(k>k_cnt){
 			for(int d=0;d<7;d++){
-				int nx = cur.second + kx[d];
-				int ny = cur.first + ky[d];
+				int nx = x + kx[d];
+				int ny = y + ky[d];
 				if(nx<0||nx>w||ny<0||ny>h) continue;
-				if(board[ny][nx]==1||vis[ny][nx]>0) continue;
-				vis[ny][nx] = vis[cur.first][cur.second]+1;
-				q.push({ny,nx});
-			}
-			k--;
-		}
-		else{
-			for(int d=0;d<4;d++){
-				int nx = cur.second + dx[d];
-				int ny = cur.first + dy[d];
-				if(nx<0||nx>w||ny<0||ny>h) continue;
-				if(board[ny][nx]==1||vis[ny][nx]>0) continue;
-				vis[ny][nx] = vis[cur.first][cur.second]+1;
-				q.push({ny,nx});
+				if(board[ny][nx]==1||vis[ny][nx][k_cnt]) continue;
+				vis[ny][nx][k_cnt+1] = true;
+				q.push({{ny,nx},{cnt+1,k_cnt+1}});
 			}
 		}
-	/*	cout << '\n';
-	
+		
+		for(int d=0;d<4;d++){
+			int nx = x + dx[d];
+			int ny = y + dy[d];
+			if(nx<0||nx>w||ny<0||ny>h) continue;
+			if(board[ny][nx]==1||vis[ny][nx][k_cnt]) continue;
+			vis[ny][nx][k_cnt+1] = true;
+			q.push({{ny,nx},{cnt+1,k_cnt}});
+		}
+
+	/*	
+	cout << '\n';
 	for(int i=0;i<h;i++){
 		for(int j=0;j<w;j++){
 			cout << vis[i][j] << ' ';	
 		}
 		cout << '\n';
-	}*/
-	
-		
 	}
-	if (vis[h-1][w-1]<=0) return -1;
-	return 0;
+*/	
+	}
+	return -1;
 }
 
 int main(){
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
 	
 	cin >> k;
 	cin >> w >> h;
