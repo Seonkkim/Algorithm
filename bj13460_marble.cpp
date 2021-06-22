@@ -2,51 +2,64 @@
 using namespace std;
 int N,M;
 string board[11];
-int visit_r[M][N];
-int visit_b[M][N];
+bool visit[11][11][11][11];
 int dy[4]={0,1,0,-1};
 int dx[4]={1,0,-1,0};
-int bx,by;
 pair<int,int> red;
 pair<int,int> blue;
-void bfs_r(){ // int bfs return cnt?
-	stack<pair<int,int>> q;
-	q.push(red);
-	visit[red.first][red.second] = true;
-	int cnt = 0;
-	while(!q.empty()){
-		auto cur = q.front(); q.pop();
-		for(int d=0;d<4;d++){
-			int ny = cur.first + dy[d];
-			int nx = cur.second + dx[d];
-			if(board[ny][nx]=='O') return cnt;
-			if(ny<0||ny>M||nx<0||nx>N) continue;
-			if(board[ny][nx]=='#'||visit[ny][nx]||board[ny][nx]=='B') continue;
-			q.push({ny,nx});
-			visit[ny][nx] = true;
-			if(board[by][bx])
-		}
+
+int cnt; 
+
+pair<int,int> go_straight(pair<int,int> p, int dir){
+	int y = p.first;
+	int x = p.second;
+	while(board[y][x]!='#'||visit_b[y][x]!=cnt){
+		y = y + dy[dir];
+		x = x + dx[dir];
 	}
+	
+	return {y-dy[dir],x-dx[dir]};
 }
 
-void bfs_b(){
-	stack<pair<int,int>> q;
-	q.push(blue);
-	visit[blue.first][blue.second] = true;
-	int cnt = 0;
-	while(!q.empty()){
-		auto cur = q.front(); q.pop();
+void bfs(){
+	queue<pair<int,int>> rq;
+	queue<pair<int,int>> bq;
+	bq.push(blue);
+	rq.push(red);
+	visit_b[red.first][red.second][blue.first][blue.second] = true;
+	
+	while(!rq.empty()){
+
+		auto rcur = rq.front(); rq.pop();
+		auto bcur = bq.front(); bq.pop();
+
+		if(board[rcur.first][rcur.second]=='O') return cnt;
+		
 		for(int d=0;d<4;d++){
-			int ny = cur.first + dy[d];
-			int nx = cur.second + dx[d];
-			if(board[ny][nx]=='O') return cnt;
-			if(ny<0||ny>M||nx<0||nx>N) continue;
-			if(board[ny][nx]=='#'||visit[ny][nx]) continue;
-			q.push({ny,nx});
-			visit[ny][nx] = true;
+			pair<int,int> r = go_straight(rcur,d);
+			pair<int,int> b = go_straight(bcur,d);
+			int ry = r.first;
+			int rx = r.second;
+			int by = b.first;
+			int bx = b.second;
+			/*
+			if(rx == bx && ry == by){
+				if(abs(ry-rcur.first)+abs(rx-rcur.second) > abs(by-bcur.first)+abs(bx-bur.second)){
+					ry -= 
+				}
+			}*/
+			
+			if(board[ry][rx]=='#'||board[by][bx]=='#'||board[by][bx]=='O'||visit_b[ry][rx][by][bx]) continue;
+			rq.push({ry,rx});
+			bq.push({by,bx});
+			visit_b[ry][rx][by][bx]=true;
+			
 			
 		}
+		if(cnt == 10) return -1;
+		cnt++;
 	}
+	return -1;
 }
 
 int main() {
@@ -67,6 +80,7 @@ int main() {
 			}
 		}
 	}
+	cout << bfs();
 	
 	return 0;
 }
