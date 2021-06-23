@@ -26,7 +26,7 @@ void bfs(){
 	queue<pair<int,int>> bq;
 	bq.push(blue);
 	rq.push(red);
-	visit_b[red.first][red.second][blue.first][blue.second] = true;
+	visit[red.first][red.second][blue.first][blue.second] = true;
 	
 	while(!rq.empty()){
 
@@ -49,10 +49,10 @@ void bfs(){
 				}
 			}*/
 			
-			if(board[ry][rx]=='#'||board[by][bx]=='#'||board[by][bx]=='O'||visit_b[ry][rx][by][bx]) continue;
+			if(board[ry][rx]=='#'||board[by][bx]=='#'||board[by][bx]=='O'||visit[ry][rx][by][bx]) continue;
 			rq.push({ry,rx});
 			bq.push({by,bx});
-			visit_b[ry][rx][by][bx]=true;
+			visit[ry][rx][by][bx]=true;
 			
 			
 		}
