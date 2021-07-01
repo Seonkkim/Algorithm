@@ -1,37 +1,31 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int board[10][10];
-bool check[10];
+int board[9][9];
 
-
-void row_check(){
+void sudoku(pair<int,int> b){
+	bool check_c[9]={false,};
+	bool check_r[9]={false,};
+	bool check_s[9]={false,};
+	
 	for(int i=0;i<9;i++){
-		if(check[i]!=true)
+		if(!check_r[board[b.first][i]]) 
 	}
-}
-
-void col_check(){
-	
-}
-
-void square_check(){
-	
-}
-
-
-void sudoku(){
 	
 }
 
 int main() {
 	ios::sync_with_stdio(0);
 	cin.tie(0);
+	vector<int,int> blank;
 	for(int i=0;i<9;i++){
 		for(int j=0;j<9;i++){
-			if(board[i][j]==0) sudoku();
+			if(board[i][j]==0) 
+			blank.push_back({i,j});
 		}
 	}
+	
+	
 	
 	return 0;
 }
